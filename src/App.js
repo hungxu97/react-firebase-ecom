@@ -11,20 +11,26 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentUser: null, //////// user se thay doi khi co ng dang nhap
+      currentUser: null, // user object
     }
   }
 
+  unsubFromAuth = null
+
   componentDidMount() {
-    auth.onAuthStateChanged((user) => {
-      console.log(user)
+    this.unsubFromAuth = auth.onAuthStateChanged((user) => {
+      this.setState({ currentUser: user })
     })
+  }
+
+  componentWillUnmount() {
+    this.unsubFromAuth()
   }
 
   render() {
     return (
       <div>
-        <Header />
+        <Header currentUser={this.state.currentUser} />
         <Switch>
           <Route exact path='/' component={HomePage}></Route>
           <Route path='/shop' component={ShopPage}></Route>
